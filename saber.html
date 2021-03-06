@@ -3,10 +3,48 @@
 
 <head>
     <title>Document</title>
+    <script>
+        function getData() {
+            const name = document.getElementById('my-name').value;
+
+            if (name == '') {
+                console.log('empty')
+                return false;
+            }
+            const request = new XMLHttpRequest();
+            request.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    const response = JSON.parse(this.responseText)
+                    let data = []
+                    for (let i = 0; i < response.results.length; i++) {
+                        data.push({
+                            collectionName: response.results[i].collectionName,
+                            collectionPrice: response.results[i].collectionPrice,
+                            currency: response.results[i].currency,
+                            country: response.results[i].country
+                        })
+                    }
+                    const info = JSON.stringify(data)
+                    console.log(info);
+                }
+            }
+            request.open(
+                'GET',
+                'https://itunes.apple.com/search?term=jack+johnson&limit=4',
+                true,
+            )
+            request.send()
+            console.log(name)
+        }
+    </script>
 </head>
 
 <body>
-    <h1>hello saber</h1>
+    <form onsubmit="getData(); return false;">
+        <input type="text" id="my-name" placeholder="User Name" required>
+        <input type="submit" value="Get Name">
+    </form>
+
 </body>
 
 </html>
